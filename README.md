@@ -12,3 +12,6 @@ Decrypt your files by using the password key to view the encrypted files.
 * Only available to decrypt and view the contents of files by the users who knows the password key.
 * Safely share and secure your files with others.
 * Protect your files from hackers or other intruders.
+
+## Usage
+
