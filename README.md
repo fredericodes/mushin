@@ -11,3 +11,4 @@ Decrypt your files by using the password key to view the encrypted files.
 * Encryption based on AES-256 cryptography. One of the highly secured protocols and makes it unbreakable to read the contents of encrypted files.
 * Only available to decrypt and view the contents of files by the users who knows the password key.
 * Safely share and secure your files with others.
+* Protect your files from hackers or other intruders.
