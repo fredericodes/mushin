@@ -2,9 +2,9 @@
 
 A cross-platform files encryption (AES-256) application. 
 
-Encrypt your files safely by using a private password key.
+The files are encrypted safely by a securely generated private key. 
 
-Decrypt your files by using the private password key to view the encrypted files.
+It can be then decrypted by using the same private key to view the encrypted files.
 
 ## Benefits of using file encryption?
 
