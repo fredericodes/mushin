@@ -4,7 +4,7 @@ A cross-platform files encryption application using AES-256 encryption.
 
 The files are encrypted safely by a securely generated private key. 
 
-It can be then decrypted by using the same private key to view the encrypted files.
+It can be decrypted by using the same private key to view the encrypted files.
 
 ## Benefits of using file encryption?
 
