@@ -1,5 +1,6 @@
 import os
 import re
+import pyperclip
 
 import dearpygui.dearpygui as dpg
 
@@ -7,6 +8,12 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 
 dpg.create_context()
+
+
+def copy_key_to_clipboard(key):
+    pyperclip.copy(key)
+    dpg.add_button(label="Key is copied to you clipboard. Paste Ctrl+V to save it", parent=output_results)
+    dpg.add_text("------", parent=output_results)
 
 
 def is_valid_file_path(app_data):
@@ -38,11 +45,13 @@ def encryption_callback(sender, app_data, user_data):
     file_path = is_valid_file_path(app_data)
     if os.path.exists(file_path):
         key = encrypt_file(file_path)
-        dpg.add_button(label="The file is encrypted in the path:", parent=output_results)
-        dpg.add_button(label=file_path + ".encrypted", parent=output_results)
-        dpg.add_button(label="The file wont be recoverable if secret key is lost", parent=output_results)
-        dpg.add_button(label="Store the secret private key safely to decrypt it later:", parent=output_results)
-        dpg.add_button(label=str(key), parent=output_results)
+        dpg.add_text("The file is encrypted in the path:", parent=output_results)
+        dpg.add_text(file_path + ".encrypted", parent=output_results)
+        dpg.add_text("The file wont be recoverable if secret key is lost", parent=output_results)
+        dpg.add_text("Store the secret private key safely to decrypt it later:", parent=output_results)
+        dpg.add_text("Click on the key to save it to your clipboard and paste the key somewhere", parent=output_results)
+        dpg.add_button(label=str(key), parent=output_results, callback=lambda: copy_key_to_clipboard(str(key)))
+        dpg.add_text("------", parent=output_results)
 
 
 def decryption_callback(sender, app_data, user_data):
