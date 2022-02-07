@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 import uuid
 
 import dearpygui.dearpygui as dpg
@@ -18,16 +19,16 @@ def callback(sender, app_data, user_data):
     file_path = file_path.replace("}", "")
 
     if os.path.exists(file_path):
-        gen_uuid_key = str(uuid.uuid4().hex)
-        key = str.encode(gen_uuid_key)
-        cipher = AES.new(key, AES.MODE_CBC)
+        key_bytes = os.urandom(32)  # For AES 256 encryption, key should be 32 bytes
+        key = key_bytes.hex()
+        cipher = AES.new(key_bytes, AES.MODE_CBC)
         with open(file_path, 'rb') as f:
             orig_file = f.read()
             encrypted_message = cipher.encrypt(pad(orig_file, AES.block_size))
             encrypted_file_path = file_path+".encrypted"
             with open(encrypted_file_path, "w") as e:
                 e.write(str(encrypted_message))
-                print("Your secret private key: " + gen_uuid_key)
+                print("Your secret private key: " + str(key))
 
 
 with dpg.file_dialog(directory_selector=False, show=False, callback=callback, id="file_dialog_id", width=500,
