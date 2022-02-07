@@ -1,7 +1,5 @@
 import os
 import re
-import sys
-import uuid
 
 import dearpygui.dearpygui as dpg
 
