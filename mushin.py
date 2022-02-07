@@ -26,7 +26,7 @@ def is_valid_file_path(app_data):
 
 
 def encrypt_file(file_path):
-    key_bytes = os.urandom(16)  # For AES 256 encryption, key should be 32 bytes
+    key_bytes = os.urandom(32)  # For AES 256 encryption, key should be 32 bytes
     cipher = AES.new(key_bytes, AES.MODE_CBC)
     with open(file_path, 'rb') as f:
         orig_file = f.read()
