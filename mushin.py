@@ -33,8 +33,9 @@ with dpg.file_dialog(directory_selector=False, show=False, callback=callback, id
                      height=500):
     dpg.add_file_extension(".*")
 
-with dpg.window(label="Select file to encrypt", width=800, height=600):
-    dpg.add_button(label="Select file", width=800, height=100, callback=lambda: dpg.show_item("file_dialog_id"))
+with dpg.window(label="Select file to encrypt or decrypt", width=800, height=600):
+    dpg.add_button(label="Encrypt file", width=800, height=280, callback=lambda: dpg.show_item("file_dialog_id"))
+    dpg.add_button(label="Decrypt file", width=800, height=280, callback=lambda: dpg.show_item("file_dialog_id"))
 
 dpg.create_viewport(title='Mushin', width=800, height=600)
 dpg.setup_dearpygui()
