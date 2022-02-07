@@ -1,6 +1,6 @@
 # Mushin
 
-A cross-platform files encryption (AES-256) application. 
+A cross-platform files encryption application using AES-256 encryption. 
 
 The files are encrypted safely by a securely generated private key. 
 
