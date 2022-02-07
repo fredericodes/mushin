@@ -27,7 +27,7 @@ def encrypt_file(file_path):
         encrypted_file_path = file_path + ".encrypted"
         with open(encrypted_file_path, "w") as e:
             e.write(str(encrypted_message))
-            print("Your secret private key: " + str(key))
+            return str(key)
 
 
 def decrypt_file(file_path):
@@ -37,11 +37,20 @@ def decrypt_file(file_path):
 def encryption_callback(sender, app_data, user_data):
     file_path = is_valid_file_path(app_data)
     if os.path.exists(file_path):
-        encrypt_file(file_path)
+        key = encrypt_file(file_path)
+        dpg.add_button(label="The file is encrypted in the path:", parent=output_results)
+        dpg.add_button(label=file_path + ".encrypted", parent=output_results)
+        dpg.add_button(label="The file wont be recoverable if secret key is lost", parent=output_results)
+        dpg.add_button(label="Store the secret private key safely to decrypt it later:", parent=output_results)
+        dpg.add_button(label=str(key), parent=output_results)
 
 
 def decryption_callback(sender, app_data, user_data):
     print("decrypt test")
+    if str(sender) == "file_decryption_dialog_id":
+        dpg.add_button(label="Don't forget me!", parent=output_results)
+    else:
+        dpg.add_button(label="Don't forget me!", parent=output_results)
 
 
 with dpg.file_dialog(directory_selector=False, show=False, callback=encryption_callback, id="file_encryption_dialog_id",
@@ -54,11 +63,14 @@ with dpg.file_dialog(directory_selector=False, show=False, callback=decryption_c
                      height=500):
     dpg.add_file_extension(".*")
 
-with dpg.window(label="Select file to encrypt or decrypt", width=800, height=600):
-    dpg.add_button(label="Encrypt file", width=800, height=280,
+with dpg.window(label="Select file to encrypt or decrypt", width=800, height=290, pos=[0]) as window:
+    dpg.add_button(label="Encrypt file", width=400, height=280, pos=[0],
                    callback=lambda: dpg.show_item("file_encryption_dialog_id"))
-    dpg.add_button(label="Decrypt file", width=800, height=280,
+    dpg.add_button(label="Decrypt file", width=400, height=280, pos=[405],
                    callback=lambda: dpg.show_item("file_decryption_dialog_id"))
+
+with dpg.window(label="Output", width=800, height=305, pos=[0, 290], horizontal_scrollbar=True) as output_results:
+    dpg.add_text("Mushin encryption decryption logs:")
 
 dpg.create_viewport(title='Mushin', width=800, height=600)
 dpg.setup_dearpygui()
