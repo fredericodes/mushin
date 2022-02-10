@@ -47,11 +47,10 @@ def decrypt_file(key, file_path):
 
     cipher = AES.new(key_bytes, AES.MODE_CBC, iv)
     decrypted_bytes = unpad(cipher.decrypt(cipher_text), AES.block_size)
-    decrypted_str = decrypted_bytes.decode()
 
     decrypted_file_path = file_path.replace(".encrypted", "")
-    with open(decrypted_file_path, "w") as e:
-        e.write(decrypted_str)
+    with open(decrypted_file_path, "wb") as e:
+        e.write(decrypted_bytes)
 
 
 def encryption_callback(sender, app_data, user_data):
