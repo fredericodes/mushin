@@ -19,7 +19,7 @@ Tested it with pdf, docx, jpg, png, xls, csv, zip files. Should support other fi
 
 ![alt text](https://github.com/FreddyJilson/mushin/blob/master/img/mushin.png)
 
-![alt text](https://github.com/FreddyJilson/mushin/blob/master/img/filexplorer.png)
+![alt text](https://github.com/FreddyJilson/mushin/blob/master/img/file_explorer.png)
 
 ![alt text](https://github.com/FreddyJilson/mushin/blob/master/img/encrypt_decrypt.png)
 
