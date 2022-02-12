@@ -8,6 +8,19 @@ networks:
 
 services:
 
+  ui:
+    build:
+      context: .
+      dockerfile: ui/docker/Dockerfile
+    ports:
+      - "10001:80"
+    depends_on:
+      - api
+    restart: always
+    networks:
+      static-network:
+        ipv4_address: 172.22.128.1
+
   api:
     build:
       context: .
@@ -17,4 +30,4 @@ services:
     restart: always
     networks:
       static-network:
-        ipv4_address: 172.22.128.1
+        ipv4_address: 172.22.128.2
