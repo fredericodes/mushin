@@ -1,0 +1,20 @@
+version: '3'
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+
+services:
+
+  api:
+    build:
+      context: .
+      dockerfile: api/docker/Dockerfile
+    ports:
+      - "10000:5000"
+    restart: always
+    networks:
+      static-network:
+        ipv4_address: 172.22.128.1
