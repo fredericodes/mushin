@@ -1,4 +1,6 @@
-# Mushin :warning: WIP
+# Mushin
+
+## :warning: This project is work in progress.
 
 Files encryption and decryption service using AES-256 encryption. 
 
