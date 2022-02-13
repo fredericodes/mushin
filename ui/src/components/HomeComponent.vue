@@ -29,6 +29,6 @@
 
   .button:hover {
     color: #001F3F;
-    background-color: #fffdd0;
+    background-color: #fff;
   }
 </style>
