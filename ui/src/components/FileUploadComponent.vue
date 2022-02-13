@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-      <dashboard :uppy="uppy" :props="{theme: 'light'}"/>
+      <dashboard :uppy="uppy" :props="{theme: 'light', proudlyDisplayPoweredByUppy: false, width: 1000000000000, height: 400}"/>
     </div>
 </template>
 
