@@ -1,11 +1,29 @@
 <template>
   <table class="buttons-div">
     <tr class="buttons-div">
-      <td><button @click="this.$router.push('encrypt-file')" class="button">Encrypt file</button></td>
-      <td><button @click="this.$router.push('decrypt-file')" class="button">Decrypt file</button></td>
+      <td><button v-on:click="redirect_to_encryption" class="button">Encrypt file</button></td>
+      <td><button v-on:click="redirect_to_decryption" class="button">Decrypt file</button></td>
     </tr>
   </table>
 </template>
+
+<script>
+export default {
+  methods: {
+    redirect_to_encryption: () => {
+      let base_url = window.location.origin
+      let encryption_status_url = "/encrypt-file"
+      window.location.href = base_url+encryption_status_url
+    },
+    redirect_to_decryption: () => {
+      let base_url = window.location.origin
+      let decryption_status_url = "/decrypt-file"
+      window.location.href = base_url+decryption_status_url
+    },
+
+  }
+}
+</script>
 
 <style>
   .buttons-div {
