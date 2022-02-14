@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeComponent from '../components/HomeComponent.vue'
-import FileUploadComponent from '../components/FileUploadComponent.vue'
+import HomeView from '../views/HomeView.vue'
+import FileUploadView from '../views/FileUploadView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,17 +8,17 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeComponent
+      component: HomeView
     },
     {
       path: '/encrypt-file',
       name: 'encrypt-file',
-      component: FileUploadComponent
+      component: FileUploadView
     },
     {
       path: '/decrypt-file',
       name: 'decrypt-file',
-      component: FileUploadComponent
+      component: FileUploadView
     }
   ]
 })

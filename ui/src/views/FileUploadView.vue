@@ -1,17 +1,17 @@
 <template>
   <div class="section">
     <div class="container">
-     <DropZone />
+     <DropZoneComponent />
 
     </div>
   </div>
 </template>
 
 <script>
-import DropZone from './DropZone.vue'
+import DropZoneComponent from '../components/DropZoneComponent.vue'
 
 export default {
   name: "App",
-  components: { DropZone }
+  components: { DropZoneComponent }
 }
 </script>
