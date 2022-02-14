@@ -9,7 +9,16 @@
       />
 
       <p v-if="!uploading" class="call-to-action">
-          Drag and drop your files here or click here to upload!
+          Drag and drop your file here or click here to upload!
+          <br>
+          <br>
+          Upload file upto 4 GB in size.
+          <br>
+          <br>
+          The following file formats are supported for encryption.
+          <br>
+          <br>
+        .jpg, .jpeg, .png, .gif, .pdf, .docx, .doc, .xls, .csv, .zip
       </p>
 
       <p v-for="file in uploadedFiles" :key="file.name">
