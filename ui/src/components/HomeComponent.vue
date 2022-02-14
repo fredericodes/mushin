@@ -1,8 +1,8 @@
 <template>
   <table class="buttons-div">
     <tr class="buttons-div">
-      <td><button v-on:click="redirect_to_encryption" class="button">Encrypt file</button></td>
-      <td><button v-on:click="redirect_to_decryption" class="button">Decrypt file</button></td>
+      <td><button v-on:click="redirect_to_encryption" class="btnMushin">Encrypt file</button></td>
+      <td><button v-on:click="redirect_to_decryption" class="btnMushin">Decrypt file</button></td>
     </tr>
   </table>
 </template>
@@ -28,12 +28,13 @@ export default {
 <style>
   .buttons-div {
     width: 100%;
+    color: white;
   }
 
-  .button {
+  .btnMushin {
     width: 100%;
     height: 100vh;
-    background-color : transparent;
+    background-color : #231F20;
     border: none;
     color: white;
     padding: 15px 32px;
@@ -45,7 +46,7 @@ export default {
     cursor: pointer;
   }
 
-  .button:hover {
+  .btnMushin:hover {
     color: #001F3F;
     background-color: #fff;
   }

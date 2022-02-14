@@ -9,13 +9,10 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@uppy/core": "^2.1.4",
-    "@uppy/tus": "^2.2.0",
-    "@uppy/vue": "^0.4.5",
-    "@uppy/webcam": "^2.0.5",
+    "axios": "^0.26.0",
+    "bulma": "^0.9.3",
     "pinia": "^2.0.11",
     "s-ago": "^2.2.0",
-    "tus-js-client": "^2.3.0",
     "vue": "^3.2.29",
     "vue-router": "^4.0.12"
   },

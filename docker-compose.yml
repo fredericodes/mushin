@@ -1,11 +1,5 @@
 version: '3'
 
-networks:
-  static-network:
-    ipam:
-      config:
-        - subnet: 172.22.0.0/16
-
 services:
 
   ui:
@@ -17,9 +11,6 @@ services:
     depends_on:
       - api
     restart: always
-    networks:
-      static-network:
-        ipv4_address: 172.22.128.1
 
   api:
     build:
@@ -28,6 +19,3 @@ services:
     ports:
       - "10000:5000"
     restart: always
-    networks:
-      static-network:
-        ipv4_address: 172.22.128.2
