@@ -18,4 +18,15 @@ services:
       dockerfile: api/docker/Dockerfile
     ports:
       - "10000:5000"
+    depends_on:
+      - rabbitmq3
     restart: always
+
+  rabbitmq3:
+    image: rabbitmq:3.8-management-alpine
+    environment:
+        - RABBITMQ_DEFAULT_USER=mushin_user
+        - RABBITMQ_DEFAULT_PASS=mushin_pass
+    ports:
+        - '5672:5672'
+        - '15672:15672'  

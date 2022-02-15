@@ -15,6 +15,7 @@ def encrypt_file(file_path):
             e.write(cipher.iv)
             e.write(encrypted_message)
             key = key_bytes.hex()
+            os.remove(file_path)
             return str(key)
 
 

@@ -3,13 +3,17 @@ import shutil
 import flask
 import uuid
 
-from flask import Flask, request, current_app
+from flask import Flask, request, current_app, jsonify
 from flask_cors import CORS
+
+from rabbitmq.producer import add_to_work_queue
+
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 4000 * 1024 * 1024
 app.config['ENCRYPT_FILE_UPLOAD_PATH'] = './encrypt-uploads'
-app.config['ENCRYPT_FILE_UPLOAD_EXTENSIONS'] = ['.jpg', '.jpeg', '.png', '.gif', '.pdf', '.docx', '.doc', '.xls', '.csv', '.zip', 'mp4', '.mp3']
+app.config['ENCRYPT_FILE_UPLOAD_EXTENSIONS'] = ['.jpg', '.jpeg', '.png', '.gif', '.pdf', '.docx', '.doc', '.xls', '.csv', '.zip', '.mp4', '.mp3']
+
 cors = CORS(app)
 
 
@@ -26,9 +30,12 @@ def upload_encrypt_file():
 
         upload_file_path = current_app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file.filename
         uploaded_file.save(upload_file_path)
-        shutil.copyfile(upload_file_path, current_app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + str(uuid.uuid4()) + "-"+uploaded_file.filename)
+        uploaded_file_unique_name = str(uuid.uuid4()) + "-"+str(uploaded_file.filename)
+        shutil.copyfile(upload_file_path, current_app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
         os.remove(upload_file_path)
-        return flask.Response(status=200)
+        add_to_work_queue(uploaded_file_unique_name)
+        response = {"encryptionFileName": uploaded_file_unique_name}
+        return jsonify(response), 200
 
     return flask.Response(status=404)
 
