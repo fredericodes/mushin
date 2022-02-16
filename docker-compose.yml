@@ -17,7 +17,7 @@ services:
       context: .
       dockerfile: api/docker/Dockerfile
     ports:
-      - "10000:5000"
+      - "10000:8080"
     depends_on:
       - rabbitmq3
     restart: always
@@ -29,4 +29,5 @@ services:
         - RABBITMQ_DEFAULT_PASS=mushin_pass
     ports:
         - '5672:5672'
-        - '15672:15672'  
+        - '15672:15672'
+    restart: always

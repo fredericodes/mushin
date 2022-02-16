@@ -4,10 +4,11 @@ WORKDIR /app
 
 RUN /usr/local/bin/python -m pip install --upgrade pip && \
     pip3 install Flask && \
-    pip3 install flask-cors && \
-    pip3 install pika
+    pip3 install pika && \
+    pip3 install waitress
 
 COPY ./api /app
 
-ENTRYPOINT [ "python3" ]
-CMD [ "server/server.py" ]
+RUN chmod a+x ./api.sh
+
+CMD [ "./api.sh" ]

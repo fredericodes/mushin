@@ -2,7 +2,8 @@ import pika
 
 
 def add_to_work_queue(message):
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost',
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq3',
+                                                                   port='5672',
                                                                    credentials=pika.credentials.PlainCredentials(
                                                                        "mushin_user", "mushin_pass")))
     channel = connection.channel()

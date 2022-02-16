@@ -21,10 +21,6 @@
         .jpg, .jpeg, .png, .gif, .pdf, .docx, .doc, .xls, .csv, .zip, mp3, mp4
       </p>
 
-      <p v-for="file in uploadedFiles" :key="file.name">
-        {{file.name}}
-      </p>
-
       <p v-if="uploading" class="progress-bar">
         <progress
           class="progress is-primary"
@@ -68,7 +64,7 @@ export default {
 
       try {
         this.uploading = true;
-        const res = await axios.post('http://192.168.1.130:5000/upload-encrypt-file', formData, {
+        const res = await axios.post('http://localhost:10000/upload-encrypt-file', formData, {
           onUploadProgress: e => this.progress = Math.round(e.loaded * 100 / e.total)
         })
         this.uploadedFiles.push(res.data.file);
