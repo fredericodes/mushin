@@ -5,22 +5,22 @@ services:
   ui:
     build:
       context: .
-      dockerfile: ui/docker/Dockerfile
+      dockerfile: docker/ui.Dockerfile
     ports:
       - "10001:80"
     depends_on:
-      - api
+      - server
     restart: always
 
-  api:
+  server:
     build:
       context: .
-      dockerfile: api/docker/Dockerfile
+      dockerfile: docker/server.Dockerfile
     ports:
       - "10000:8080"
     depends_on:
       - rabbitmq3
-    restart: always
+    restart: always  
 
   rabbitmq3:
     image: rabbitmq:3.8-management-alpine

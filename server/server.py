@@ -10,7 +10,7 @@ import uuid
 
 from flask import Flask, request, current_app, make_response
 
-from rabbitmq.producer import add_to_work_queue
+from producer.producer import add_to_work_queue
 
 
 app = Flask(__name__)
@@ -52,7 +52,7 @@ def upload_encrypt_file():
             shutil.copyfile(upload_file_path,
                             current_app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
             os.remove(upload_file_path)
-            add_to_work_queue(uploaded_file_unique_name)
+            # add_to_work_queue(uploaded_file_unique_name)
             # response = {"encryptionFileName": uploaded_file_unique_name}
             # response.headers.add('Access-Control-Allow-Origin', '*')
             return _corsify_actual_response(flask.Response(status=200))

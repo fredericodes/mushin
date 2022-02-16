@@ -7,8 +7,8 @@ RUN /usr/local/bin/python -m pip install --upgrade pip && \
     pip3 install pika && \
     pip3 install waitress
 
-COPY ./api /app
+COPY ./server /app/server
+COPY ./producer /app/producer
 
-RUN chmod a+x ./api.sh
-
-CMD [ "./api.sh" ]
+ENTRYPOINT [ "python3" ]
+CMD [ "server/server.py" ]
