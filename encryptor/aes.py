@@ -23,6 +23,8 @@ def encrypt_file(file_path):
             os.remove(file_path)
             return str(key)
 
+    return None
+
 
 def decrypt_file(key, file_path):
     key_bytes = bytes.fromhex(key)

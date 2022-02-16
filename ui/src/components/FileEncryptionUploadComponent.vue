@@ -64,7 +64,7 @@ export default {
 
       try {
         this.uploading = true;
-        const res = await axios.post('http://localhost:10000/upload-encrypt-file', formData, {
+        const res = await axios.post('http://localhost:10000/encryption/upload', formData, {
           onUploadProgress: e => this.progress = Math.round(e.loaded * 100 / e.total)
         })
         this.uploadedFiles.push(res.data.file);

@@ -10,7 +10,7 @@ import flask
 import uuid
 import redis
 
-from flask import Flask, request, current_app, jsonify
+from flask import Flask, request, current_app, jsonify, send_from_directory
 from flask_cors import CORS, cross_origin
 
 from producer.producer import add_to_work_queue
@@ -24,9 +24,9 @@ app.config['ENCRYPT_FILE_UPLOAD_EXTENSIONS'] = ['.jpg', '.jpeg', '.png', '.gif',
 cors = CORS(app)
 
 
-@app.route('/upload-encrypt-file', methods=['POST', 'OPTIONS'])
+@app.route('/encryption/upload', methods=['POST', 'OPTIONS'])
 @cross_origin()
-def upload_encrypt_file():
+def upload_file_for_encryption():
     if not os.path.exists(app.config['ENCRYPT_FILE_UPLOAD_PATH']):
         os.makedirs(app.config['ENCRYPT_FILE_UPLOAD_PATH'])
 
@@ -45,7 +45,7 @@ def upload_encrypt_file():
 
         redis_instance = redis.Redis(host='redis', port=6379)
         encryption_tracking_id = str(uuid.uuid4())
-        redis_instance.set(encryption_tracking_id, current_app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
+        redis_instance.set(encryption_tracking_id, uploaded_file_unique_name)
         add_to_work_queue(encryption_tracking_id)
         response = {"encryptionTrackingId": encryption_tracking_id}
         return jsonify(response), 200
@@ -53,8 +53,28 @@ def upload_encrypt_file():
     return flask.Response(status=404)
 
 
-@app.route('/upload-decrypt-file', methods=['POST'])
-def upload_decrypt_file():
+@app.route('/encryption/upload', methods=['GET'])
+@cross_origin()
+def get_file_for_encryption():
+    file_name = request.args.get('fileName')
+    response = send_from_directory(directory=str(current_app.config['ENCRYPT_FILE_UPLOAD_PATH']),
+                                   filename=str(file_name))
+    response.headers['status_code'] = '200'
+    return response
+
+
+@app.route('/encryption/upload', methods=['DELETE'])
+@cross_origin()
+def remove_file_for_encryption():
+    file_name = request.args.get('fileName')
+    os.remove(current_app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + str(file_name))
+    return flask.Response(status=200)
+
+
+@app.route('/decryption/upload', methods=['POST', 'OPTIONS'])
+@cross_origin()
+def upload_file_for_decryption():
+    # TODO
     return flask.Response(status=200)
 
 
