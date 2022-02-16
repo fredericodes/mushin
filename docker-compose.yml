@@ -20,7 +20,15 @@ services:
       - "10000:8080"
     depends_on:
       - rabbitmq3
-    restart: always  
+    restart: always
+
+  consumer:
+    build:
+      context: .
+      dockerfile: docker/consumer.Dockerfile
+    depends_on:
+      - rabbitmq3
+    restart: always
 
   rabbitmq3:
     image: rabbitmq:3.8-management-alpine
