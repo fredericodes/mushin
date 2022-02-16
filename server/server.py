@@ -8,8 +8,9 @@ import os
 import shutil
 import flask
 import uuid
+import redis
 
-from flask import Flask, request, current_app, make_response
+from flask import Flask, request, current_app, jsonify
 from flask_cors import CORS, cross_origin
 
 from producer.producer import add_to_work_queue
@@ -41,10 +42,13 @@ def upload_encrypt_file():
         shutil.copyfile(upload_file_path,
                         current_app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
         os.remove(upload_file_path)
-        # add_to_work_queue(uploaded_file_unique_name)
-        # response = {"encryptionFileName": uploaded_file_unique_name}
-        # response.headers.add('Access-Control-Allow-Origin', '*')
-        return flask.Response(status=200)
+
+        redis_instance = redis.Redis(host='redis', port=6379)
+        encryption_tracking_id = str(uuid.uuid4())
+        redis_instance.set(encryption_tracking_id, current_app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
+        add_to_work_queue(encryption_tracking_id)
+        response = {"encryptionTrackingId": encryption_tracking_id}
+        return jsonify(response), 200
 
     return flask.Response(status=404)
 

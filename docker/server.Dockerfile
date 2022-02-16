@@ -6,7 +6,8 @@ RUN /usr/local/bin/python -m pip install --upgrade pip && \
     pip3 install Flask && \
     pip3 install flask-cors && \
     pip3 install pika && \
-    pip3 install waitress
+    pip3 install waitress && \
+    pip3 install redis
 
 COPY ./server /app/server
 COPY ./producer /app/producer
