@@ -33,8 +33,8 @@ celery = make_celery(app)
 
 
 @celery.task(name='server.celery_async.encrypt_upload_file')
-def encrypt_upload_file(path):
-    encrypt_file(path)
+def encrypt_upload_file(path, key_bytes):
+    encrypt_file(path, key_bytes)
 
 
 @app.route('/encryption/upload', methods=['POST', 'OPTIONS'])
@@ -55,12 +55,17 @@ def upload_file_for_encryption():
                         app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
         os.remove(upload_file_path)
 
-        task = encrypt_upload_file.delay(app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
+        key_bytes = os.urandom(32)  # For AES 256 encryption, key should be 32 bytes
+        key = key_bytes.hex()
+        task = encrypt_upload_file.delay(app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name, key_bytes)
 
         redis_instance = redis.Redis(host='redis', port=6379)
         redis_instance.set(task.id, app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
 
-        response = {"encryptionTrackingId": str(task.id)}
+        response = {
+            "encryptionTrackingId": str(task.id),
+            "key": str(key)
+        }
         return jsonify(response), http.HTTPStatus.OK
 
     return flask.Response(status=http.HTTPStatus.NOT_FOUND)

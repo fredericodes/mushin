@@ -10,8 +10,7 @@ from Crypto.Util.Padding import pad
 from Crypto.Util.Padding import unpad
 
 
-def encrypt_file(file_path):
-    key_bytes = os.urandom(32)  # For AES 256 encryption, key should be 32 bytes
+def encrypt_file(file_path, key_bytes):
     cipher = AES.new(key_bytes, AES.MODE_CBC)
     with open(file_path, 'rb') as f:
         orig_file = f.read()
@@ -20,9 +19,8 @@ def encrypt_file(file_path):
         with open(encrypted_file_path, "wb") as e:
             e.write(cipher.iv)
             e.write(encrypted_message)
-            key = key_bytes.hex()
             os.remove(file_path)
-            return str(key)
+            return key_bytes.hex()
 
     return None
 
