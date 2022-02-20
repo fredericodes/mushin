@@ -1,12 +1,15 @@
 import os
 import sys
 
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(os.path.dirname(__file__))
 
 import shutil
 import flask
 import uuid
+import redis
+import http
 
 
 from flask import Flask, request, current_app, jsonify, send_file
@@ -43,7 +46,7 @@ def upload_file_for_encryption():
     if uploaded_file.filename != '':
         file_ext = os.path.splitext(uploaded_file.filename)[1]
         if file_ext not in current_app.config['ENCRYPT_FILE_UPLOAD_EXTENSIONS']:
-            return flask.Response(status=400)
+            return flask.Response(status=http.HTTPStatus.BAD_REQUEST)
 
         upload_file_path = app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file.filename
         uploaded_file.save(upload_file_path)
@@ -53,17 +56,34 @@ def upload_file_for_encryption():
         os.remove(upload_file_path)
 
         task = encrypt_upload_file.delay(app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
-        response = {"encryptionTrackingId": str(task.id)}
-        return jsonify(response), 200
 
-    return flask.Response(status=404)
+        redis_instance = redis.Redis(host='redis', port=6379)
+        redis_instance.set(task.id, app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
+
+        response = {"encryptionTrackingId": str(task.id)}
+        return jsonify(response), http.HTTPStatus.OK
+
+    return flask.Response(status=http.HTTPStatus.NOT_FOUND)
+
+
+@app.route('/encrypted', methods=['GET'])
+@cross_origin()
+def get_encrypted_file():
+    tracking_id = request.args.get('trackingId')
+    if tracking_id == "":
+        return flask.Response(status=http.HTTPStatus.BAD_REQUEST)
+
+    redis_instance = redis.Redis(host='redis', port=6379)
+    file_to_encrypt_path = redis_instance.get(tracking_id)
+    path = app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + str(file_to_encrypt_path) + ".encrypted"
+    return send_file(path, as_attachment=True)
 
 
 @app.route('/decryption/upload', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def upload_file_for_decryption():
     # TODO
-    return flask.Response(status=200)
+    return flask.Response(status=http.HTTPStatus.OK)
 
 
 if __name__ == '__main__':
