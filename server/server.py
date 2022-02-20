@@ -15,6 +15,7 @@ import http
 from flask import Flask, request, current_app, jsonify, send_file
 from flask_cors import CORS, cross_origin
 from celery_async import make_celery
+from celery.result import AsyncResult
 from pathlib import Path
 from encryptor.aes import encrypt_file
 
@@ -71,6 +72,28 @@ def upload_file_for_encryption():
     return flask.Response(status=http.HTTPStatus.NOT_FOUND)
 
 
+@app.route('/encryption/status', methods=['GET'])
+@cross_origin()
+def get_encryption_status():
+    tracking_id = request.args.get('trackingId')
+    if tracking_id == "":
+        return flask.Response(status=http.HTTPStatus.BAD_REQUEST)
+
+    redis_instance = redis.Redis(host='redis', port=6379)
+    output = redis_instance.get(str(tracking_id))
+    if output is None:
+        return flask.Response(status=http.HTTPStatus.NOT_FOUND)
+
+    res = AsyncResult(str(tracking_id))
+    status = res.status
+
+    response = {
+        "encryptionTrackingId": str(tracking_id),
+        "status": str(status)
+    }
+    return jsonify(response), http.HTTPStatus.OK
+
+
 @app.route('/encrypted', methods=['GET'])
 @cross_origin()
 def get_encrypted_file():
@@ -89,6 +112,28 @@ def get_encrypted_file():
 def upload_file_for_decryption():
     # TODO
     return flask.Response(status=http.HTTPStatus.OK)
+
+
+@app.route('/decryption/status', methods=['GET'])
+@cross_origin()
+def get_decryption_status():
+    tracking_id = request.args.get('trackingId')
+    if tracking_id == "":
+        return flask.Response(status=http.HTTPStatus.BAD_REQUEST)
+
+    redis_instance = redis.Redis(host='redis', port=6379)
+    output = redis_instance.get(str(tracking_id))
+    if output is None:
+        return flask.Response(status=http.HTTPStatus.NOT_FOUND)
+
+    res = AsyncResult(str(tracking_id))
+    status = res.status
+
+    response = {
+        "encryptionTrackingId": str(tracking_id),
+        "status": str(status)
+    }
+    return jsonify(response), http.HTTPStatus.OK
 
 
 if __name__ == '__main__':
