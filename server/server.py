@@ -34,8 +34,8 @@ celery = make_celery(app)
 
 
 @celery.task(name='server.celery_async.encrypt_upload_file')
-def encrypt_upload_file(path, key_bytes):
-    encrypt_file(path, key_bytes)
+def encrypt_upload_file(args):
+    encrypt_file(args)
 
 
 @app.route('/encryption/upload', methods=['POST', 'OPTIONS'])
@@ -56,9 +56,11 @@ def upload_file_for_encryption():
                         app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
         os.remove(upload_file_path)
 
-        key_bytes = os.urandom(32)  # For AES 256 encryption, key should be 32 bytes
+        file_path = app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name
+        key_bytes = os.urandom(32)  # Generate a key for encryption
         key = key_bytes.hex()
-        task = encrypt_upload_file.delay(app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name, key_bytes)
+        args = (file_path, key)
+        task = encrypt_upload_file.delay(args)
 
         redis_instance = redis.Redis(host='redis', port=6379)
         redis_instance.set(task.id, app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)

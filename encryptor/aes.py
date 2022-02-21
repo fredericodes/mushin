@@ -9,8 +9,16 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 from Crypto.Util.Padding import unpad
 
+import hashlib
 
-def encrypt_file(file_path, key_bytes):
+
+def encrypt_file(args):
+    file_path = args[0]
+    key = args[1]
+
+    # For AES 256 encryption, key should be 32 bytes. Key hashed is 32 bytes.
+    key_bytes = hashlib.sha256(key.encode()).digest()
+
     cipher = AES.new(key_bytes, AES.MODE_CBC)
     with open(file_path, 'rb') as f:
         orig_file = f.read()
@@ -20,9 +28,6 @@ def encrypt_file(file_path, key_bytes):
             e.write(cipher.iv)
             e.write(encrypted_message)
             os.remove(file_path)
-            return key_bytes.hex()
-
-    return None
 
 
 def decrypt_file(key, file_path):
