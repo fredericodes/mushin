@@ -64,10 +64,10 @@ def upload_file_for_encryption():
 
         redis_instance = redis.Redis(host='redis', port=6379)
         redis_instance.set(task.id, app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
+        redis_instance.set(app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name, str(key))
 
         response = {
-            "encryptionTrackingId": str(task.id),
-            "key": str(key)
+            "encryptionTrackingId": str(task.id)
         }
         return jsonify(response), http.HTTPStatus.OK
 

@@ -13,5 +13,9 @@
     {
       "path": "./tsconfig.vite-config.json"
     }
+  ],
+
+  "types": [
+    "vue-sweetalert2"
   ]
 }

@@ -69,12 +69,32 @@ export default {
         })
         this.uploadedFiles.push(res.data.file);
         this.uploading = false;
+
+        if (res.status === 200) {
+          this.showSuccessfulUpload(res.data.encryptionTrackingId)
+        } else {
+          this.showFailedUpload()
+        }
+
       } catch (err) {
         this.message = err.response.data().error;
         this.error = true;
         this.uploading = false;
       }
-    }
+    },
+
+    showSuccessfulUpload(trackingId, secretKeyForDecryption) {
+      this.$swal.fire({
+          icon: 'success',
+          titleText: `The file is now uploaded for encryption.`,
+          text: `Track the file encryption status using the tracking id: ${trackingId}`
+        })
+    },
+
+    showFailedUpload() {
+      let message = `The file upload was having issues.`
+      this.$swal(message);
+    },
   }
 }
 
