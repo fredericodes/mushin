@@ -83,7 +83,7 @@ export default {
       }
     },
 
-    showSuccessfulUpload(trackingId, secretKeyForDecryption) {
+    showSuccessfulUpload(trackingId) {
       this.$swal.fire({
           icon: 'success',
           titleText: `The file is now uploaded for encryption.`,

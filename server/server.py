@@ -86,7 +86,7 @@ def get_encryption_status():
     if output is None:
         return flask.Response(status=http.HTTPStatus.NOT_FOUND)
 
-    res = AsyncResult(str(tracking_id))
+    res = AsyncResult(id=str(tracking_id))
     status = res.status
 
     response = {
