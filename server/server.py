@@ -63,7 +63,7 @@ def upload_file_for_encryption():
         task = encrypt_upload_file.delay(args)
 
         redis_instance = redis.Redis(host='redis', port=6379)
-        redis_instance.set(task.id, app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
+        redis_instance.set(str(task.id), app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
         redis_instance.set(app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name, str(key))
 
         response = {
@@ -82,16 +82,21 @@ def get_encryption_status():
         return flask.Response(status=http.HTTPStatus.BAD_REQUEST)
 
     redis_instance = redis.Redis(host='redis', port=6379)
-    output = redis_instance.get(str(tracking_id))
-    if output is None:
+    file_path = redis_instance.get(str(tracking_id))
+    if file_path is None:
         return flask.Response(status=http.HTTPStatus.NOT_FOUND)
 
-    res = AsyncResult(id=str(tracking_id))
-    status = res.status
+    encryption_key = redis_instance.get(file_path.decode("utf-8"))
+    if encryption_key is None:
+        return flask.Response(status=http.HTTPStatus.NOT_FOUND)
+
+    result = celery.AsyncResult(id=tracking_id)
+    status = result.state
 
     response = {
         "encryptionTrackingId": str(tracking_id),
-        "status": str(status)
+        "status": str(status),
+        "encryptionKey": str(encryption_key.decode("utf-8"))
     }
     return jsonify(response), http.HTTPStatus.OK
 

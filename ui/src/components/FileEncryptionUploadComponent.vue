@@ -18,7 +18,7 @@
           The following file formats are supported for encryption.
           <br>
           <br>
-        .jpg, .jpeg, .png, .gif, .pdf, .docx, .doc, .xls, .csv, .zip, mp3, mp4
+        .jpg, .jpeg, .png, .gif, .pdf, .docx, .doc, .xls, .csv, .zip, .mp3, .mp4, .tif
       </p>
 
       <p v-if="uploading" class="progress-bar">
