@@ -11,6 +11,7 @@
 
 <script>
 import axios from 'axios'
+import { v4 as uuidV4 } from 'uuid';
 
 export default {
   name: "TrackEncryption",
@@ -26,14 +27,19 @@ export default {
     async trackEncryptionStatus(){
       const trackingId = this.trackingId;
       if (this.trackingId === "") {
-        this.showTrackingIdNotProvidedErr()
+        await this.showTrackingIdNotProvidedErr()
       } else {
         try {
           const response = await axios.get(`http://localhost:10000/encryption/status?trackingId=${trackingId}`)
           if (response.status === 200) {
-            this.showSuccessMessage(response.data.encryptionTrackingId)
+            if (response.data.status === 'SUCCESS') {
+              await this.showSuccessMessageWithEncryptedFileDownload(response.data)
+              await this.downloadEncryptedFile(trackingId)
+            } else {
+              await this.showSuccessMessage(response.data)
+            }
           } else {
-            this.showTrackingIdNotProvidedErr()
+            await this.showTrackingIdNotProvidedErr()
           }
         } catch (err) {
           this.message = err.response.data().error;
@@ -41,20 +47,50 @@ export default {
       }
     },
 
-    showSuccessMessage(trackingId) {
-      this.$swal.fire({
+    async showSuccessMessageWithEncryptedFileDownload(data) {
+      await this.$swal.fire({
         icon: 'success',
-        titleText: `The file is now uploaded for encryption.`,
-        text: `Track the file encryption status using the tracking id: ${trackingId}`
+        titleText: `Tracking status`,
+        html: `Tracking id: ${data.encryptionTrackingId} <br><br>
+               Status: ${data.status}  <br><br>
+               Encryption key: ${data.encryptionKey}  <br><br>
+               Do not share the encryption key with anyone. <br>
+               Save the encryption key safely to decrypt the encrypted file later.
+              `
       })
     },
 
-    showTrackingIdNotProvidedErr() {
-      this.$swal.fire({
+    async showSuccessMessage(data) {
+      await this.$swal.fire({
+        icon: 'success',
+        titleText: `Tracking status`,
+        text: `Tracking id: ${data.encryptionTrackingId}
+               Status: ${data.status}
+              `
+      })
+    },
+
+    async showTrackingIdNotProvidedErr() {
+      await this.$swal.fire({
         icon: 'error',
         titleText: `File encryption tracking`,
         text: `The file encryption tracking id was not provided.`
       })
+    },
+
+    async downloadEncryptedFile(trackingId) {
+      await axios({
+        url: `http://localhost:10000/encrypted?trackingId=${trackingId}`,
+        method: 'GET',
+        responseType: 'blob',
+      }).then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${uuidV4()}.encrypted`);
+        document.body.appendChild(link);
+        link.click();
+      });
     },
   }
 }

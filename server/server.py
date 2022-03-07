@@ -110,7 +110,7 @@ def get_encrypted_file():
 
     redis_instance = redis.Redis(host='redis', port=6379)
     file_to_encrypt_path = redis_instance.get(tracking_id)
-    path = app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + str(file_to_encrypt_path) + ".encrypted"
+    path = str(file_to_encrypt_path.decode("utf-8")) + ".encrypted"
     return send_file(path, as_attachment=True)
 
 
