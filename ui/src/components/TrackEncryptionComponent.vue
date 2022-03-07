@@ -56,7 +56,8 @@ export default {
                Encryption key: ${data.encryptionKey}  <br><br>
                Do not share the encryption key with anyone. <br>
                Save the encryption key safely to decrypt the encrypted file later.
-              `
+              `,
+        confirmButtonText: "Download encrypted file"
       })
     },
 

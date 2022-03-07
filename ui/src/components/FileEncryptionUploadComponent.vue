@@ -71,9 +71,10 @@ export default {
         this.uploading = false;
 
         if (res.status === 200) {
-          this.showSuccessfulUpload(res.data.encryptionTrackingId)
+          await this.showSuccessfulUpload(res.data.encryptionTrackingId)
+          await this.navigateToEncryptionTrackingPage()
         } else {
-          this.showFailedUpload()
+          await this.showFailedUpload()
         }
 
       } catch (err) {
@@ -83,18 +84,26 @@ export default {
       }
     },
 
-    showSuccessfulUpload(trackingId) {
-      this.$swal.fire({
+    async showSuccessfulUpload(trackingId) {
+      await this.$swal.fire({
           icon: 'success',
           titleText: `The file is now uploaded for encryption.`,
-          text: `Track the file encryption status using the tracking id: ${trackingId}`
+          text: `Track the file encryption status using the tracking id.
+                 Copy tracking ID as it won't be shown again: ${trackingId}`,
+          confirmButtonText: "Go to tracking"
         })
     },
 
-    showFailedUpload() {
+    async showFailedUpload() {
       let message = `The file upload was having issues.`
       this.$swal(message);
     },
+
+    async navigateToEncryptionTrackingPage() {
+      let base_url = window.location.origin
+      let encryption_tracking_url = "/track-encryption"
+      window.location.href = base_url+encryption_tracking_url
+    }
   }
 }
 
