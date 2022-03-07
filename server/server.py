@@ -129,18 +129,30 @@ def get_decryption_status():
         return flask.Response(status=http.HTTPStatus.BAD_REQUEST)
 
     redis_instance = redis.Redis(host='redis', port=6379)
-    output = redis_instance.get(str(tracking_id))
-    if output is None:
+    file_path = redis_instance.get(str(tracking_id))
+    if file_path is None:
         return flask.Response(status=http.HTTPStatus.NOT_FOUND)
 
-    res = AsyncResult(str(tracking_id))
-    status = res.status
+    decryption_key = redis_instance.get(file_path.decode("utf-8"))
+    if decryption_key is None:
+        return flask.Response(status=http.HTTPStatus.NOT_FOUND)
+
+    result = celery.AsyncResult(id=tracking_id)
+    status = result.state
 
     response = {
-        "encryptionTrackingId": str(tracking_id),
-        "status": str(status)
+        "decryptionTrackingId": str(tracking_id),
+        "status": str(status),
+        "decryptionKey": str(decryption_key.decode("utf-8"))
     }
     return jsonify(response), http.HTTPStatus.OK
+
+
+@app.route('/decrypted', methods=['GET'])
+@cross_origin()
+def get_decrypted_file():
+    # TODO
+    return flask.Response(status=http.HTTPStatus.OK)
 
 
 if __name__ == '__main__':
