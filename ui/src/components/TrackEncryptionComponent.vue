@@ -11,7 +11,6 @@
 
 <script>
 import axios from 'axios'
-import { v4 as uuidV4 } from 'uuid';
 
 export default {
   name: "TrackEncryption",
@@ -34,7 +33,7 @@ export default {
           if (response.status === 200) {
             if (response.data.status === 'SUCCESS') {
               await this.showSuccessMessageWithEncryptedFileDownload(response.data)
-              await this.downloadEncryptedFile(trackingId)
+              await this.downloadEncryptedFile(trackingId, response.data.fileName)
             } else {
               await this.showSuccessMessage(response.data)
             }
@@ -82,7 +81,7 @@ export default {
       })
     },
 
-    async downloadEncryptedFile(trackingId) {
+    async downloadEncryptedFile(trackingId, fileName) {
       await axios({
         url: `http://localhost:10000/encrypted?trackingId=${trackingId}`,
         method: 'GET',
@@ -91,7 +90,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', `${uuidV4()}.encrypted`);
+        link.setAttribute('download', `${fileName}.encrypted`);
         document.body.appendChild(link);
         link.click();
       });

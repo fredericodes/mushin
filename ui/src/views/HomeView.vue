@@ -21,7 +21,7 @@ export default {
     },
     redirect_to_decryption: () => {
       let base_url = window.location.origin
-      let decryption_upload_url = "/decrypt-file"
+      let decryption_upload_url = "/decrypt-file/private-key"
       window.location.href = base_url+decryption_upload_url
     },
 

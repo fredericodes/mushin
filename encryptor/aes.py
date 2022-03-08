@@ -30,8 +30,11 @@ def encrypt_file(args):
             os.remove(file_path)
 
 
-def decrypt_file(key, file_path):
-    key_bytes = bytes.fromhex(key)
+def decrypt_file(args):
+    file_path = args[0]
+    key = args[1]
+
+    key_bytes = hashlib.sha256(key.encode()).digest()
     with open(file_path, 'rb') as c_file:
         iv = c_file.read(16)
         cipher_text = c_file.read()
