@@ -37,7 +37,7 @@
 import axios from 'axios'
 
 export default {
-  name: "Dropzone",
+  name: "DecryptionDropZone",
 
   data() {
     return {
@@ -59,12 +59,29 @@ export default {
 
       try {
         this.uploading = true;
-        const res = await axios.post(`http://localhost:10000/decryption/upload?decryptionKey=${privateSecretKey}`, formData, {
+        const res = await axios.post(`http://localhost:10000/decryption/upload`, formData, {
           onUploadProgress: e => this.progress = Math.round(e.loaded * 100 / e.total)
         })
         this.uploadedFiles.push(res.data.file);
         this.uploading = false;
-        localStorage.clear()
+
+        if (res.status === 200) {
+          const response = await axios.put(
+              `http://localhost:10000/decryption/upload?fileName=${res.data.fileName}&privateSecretKey=${privateSecretKey}`)
+          if (response.status === 200) {
+            await this.showSuccessfulUpload(response.data.decryptionTrackingId)
+            localStorage.clear()
+            await this.navigateToDecryptionTracking()
+          } else {
+            await this.showFailedUpload()
+            localStorage.clear()
+            await this.navigateToStorePrivateKey()
+          }
+        } else {
+          await this.showFailedUpload()
+          localStorage.clear()
+          await this.navigateToStorePrivateKey()
+        }
       } catch (err) {
         this.message = err.response.data().error;
         this.error = true;
@@ -72,11 +89,33 @@ export default {
       }
     },
 
-    navigateToStorePrivateKey() {
+    async navigateToStorePrivateKey() {
       let base_url = window.location.origin
       let store_private_key_url = "/decrypt-file/private-key"
       window.location.href = base_url+store_private_key_url
-    }
+    },
+
+    async navigateToDecryptionTracking() {
+      let base_url = window.location.origin
+      let decryption_tracking_url = "/track-decryption"
+      window.location.href = base_url+decryption_tracking_url
+    },
+
+    async showSuccessfulUpload(trackingId) {
+      await this.$swal.fire({
+        icon: 'success',
+        titleText: `The file is now uploaded for decryption.`,
+        html: `Track the file encryption status using the tracking id.
+                 Copy tracking ID as it won't be shown again:
+                 <b style="color: darkred">${trackingId}</b>`,
+        confirmButtonText: "Go to tracking"
+      })
+    },
+
+    async showFailedUpload() {
+      let message = `The file upload was having issues.`
+      this.$swal(message);
+    },
   },
 
   beforeMount() {

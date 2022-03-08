@@ -126,10 +126,6 @@ def get_encrypted_file():
 def upload_file_for_decryption():
     Path(app.config['DECRYPT_FILE_UPLOAD_PATH']).mkdir(parents=True, exist_ok=True)
 
-    decryption_key = request.args.get('decryptionKey')
-    if decryption_key == "":
-        return flask.Response(status=http.HTTPStatus.BAD_REQUEST)
-
     uploaded_file = request.files['file']
     if uploaded_file.filename != '':
         file_ext = os.path.splitext(uploaded_file.filename)[1]
@@ -138,27 +134,41 @@ def upload_file_for_decryption():
 
         upload_file_path = app.config['DECRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file.filename
         uploaded_file.save(upload_file_path)
-        uploaded_file_unique_name = str(uuid.uuid4()) + "-" + str(uploaded_file.filename)
-        shutil.copyfile(upload_file_path,
-                        app.config['DECRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name)
-        os.remove(upload_file_path)
-
-        file_path = app.config['DECRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name
-        args = (file_path, decryption_key)
-        task = decrypt_upload_file.delay(args)
-
-        redis_instance = redis.Redis(host='redis', port=6379)
-        redis_instance.set(str(task.id), app.config['DECRYPT_FILE_UPLOAD_PATH'] + "/" +
-                           uploaded_file_unique_name.replace(".encrypted", ""))
-        redis_instance.set(app.config['DECRYPT_FILE_UPLOAD_PATH'] + "/" +
-                           uploaded_file_unique_name.replace(".encrypted", ""), str(decryption_key))
 
         response = {
-            "decryptionTrackingId": str(task.id)
+            "fileName": uploaded_file.filename
         }
         return jsonify(response), http.HTTPStatus.OK
 
     return flask.Response(status=http.HTTPStatus.NOT_FOUND)
+
+
+@app.route('/decryption/upload', methods=['PUT'])
+def decryption_file():
+    Path(app.config['DECRYPT_FILE_UPLOAD_PATH']).mkdir(parents=True, exist_ok=True)
+
+    uploaded_file_name = request.args.get('fileName')
+    if uploaded_file_name == "":
+        return flask.Response(status=http.HTTPStatus.BAD_REQUEST)
+
+    decryption_key = request.args.get('privateSecretKey')
+    if decryption_key == "":
+        return flask.Response(status=http.HTTPStatus.BAD_REQUEST)
+
+    file_path = app.config['DECRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_name
+    args = (file_path, decryption_key)
+    task = decrypt_upload_file.delay(args)
+
+    redis_instance = redis.Redis(host='redis', port=6379)
+    redis_instance.set(str(task.id), app.config['DECRYPT_FILE_UPLOAD_PATH'] + "/" +
+                       uploaded_file_name.replace(".encrypted", ""))
+    redis_instance.set(app.config['DECRYPT_FILE_UPLOAD_PATH'] + "/" +
+                       uploaded_file_name.replace(".encrypted", ""), str(decryption_key))
+
+    response = {
+        "decryptionTrackingId": str(task.id)
+    }
+    return jsonify(response), http.HTTPStatus.OK
 
 
 @app.route('/decryption/status', methods=['GET'])
