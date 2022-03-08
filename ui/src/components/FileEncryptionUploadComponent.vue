@@ -88,8 +88,9 @@ export default {
       await this.$swal.fire({
           icon: 'success',
           titleText: `The file is now uploaded for encryption.`,
-          text: `Track the file encryption status using the tracking id.
-                 Copy tracking ID as it won't be shown again: ${trackingId}`,
+          html: `Track the file encryption status using the tracking id.
+                 Copy tracking ID as it won't be shown again:
+                 <b style="color: darkred">${trackingId}</b>`,
           confirmButtonText: "Go to tracking"
         })
     },

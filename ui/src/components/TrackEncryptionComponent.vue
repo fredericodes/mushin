@@ -53,9 +53,11 @@ export default {
         titleText: `Tracking status`,
         html: `Tracking id: ${data.encryptionTrackingId} <br><br>
                Status: ${data.status}  <br><br>
-               Encryption key: ${data.encryptionKey}  <br><br>
+               Encryption key: <b style="color: darkred">${data.encryptionKey}</b>  <br><br>
+               <b>
                Do not share the encryption key with anyone. <br>
                Save the encryption key safely to decrypt the encrypted file later.
+               </b>
               `,
         confirmButtonText: "Download encrypted file"
       })
@@ -65,8 +67,9 @@ export default {
       await this.$swal.fire({
         icon: 'success',
         titleText: `Tracking status`,
-        text: `Tracking id: ${data.encryptionTrackingId}
-               Status: ${data.status}
+        html: `Tracking id: ${data.encryptionTrackingId} <br><br>
+               Status: ${data.status} <br><br>
+               <b>The encryption process is still in ${data.status} status. Track status again later.</b>
               `
       })
     },
