@@ -1,4 +1,6 @@
 <template xmlns="http://www.w3.org/1999/html">
+  <label>File Encryption: Upload a file for encryption</label>
+  <br><br>
   <form @submit.prevent="sendFile" enctype="multipart/form-data">
     <div class="dropzone">
       <input
@@ -37,6 +39,8 @@
 
     </div>
   </form>
+  <br>
+  <button v-on:click="navigateToHomePage" class="homeBtn"><i class="fa fa-home"></i> Home</button>
 </template>
 
 <script>
@@ -104,6 +108,11 @@ export default {
       let base_url = window.location.origin
       let encryption_tracking_url = "/track-encryption"
       window.location.href = base_url+encryption_tracking_url
+    },
+
+    async navigateToHomePage() {
+      let base_url = window.location.origin
+      window.location.href = base_url
     }
   }
 }
@@ -111,6 +120,23 @@ export default {
 </script>
 
 <style>
+.homeBtn {
+  width: 100%;
+  color: #fff;
+  background-color: #231F20;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  font-size: large;
+  border-radius: 40px;
+}
+
+.homeBtn:hover {
+  color: black;
+  background-color: #4CAF50;
+}
+
   .dropzone {
     min-height: 200px;
     padding: 10px 10px;

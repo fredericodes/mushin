@@ -6,6 +6,7 @@
 
       <input v-on:click="storePrivateSecretKeyInLocalStorage" type="submit" value="Submit">
     </form>
+    <button v-on:click="navigateToHomePage" class="homeBtn"><i class="fa fa-home"></i> Home</button>
   </div>
 </template>
 
@@ -49,12 +50,34 @@ export default {
         text: `The private secret key was not provided for decryption.`
       })
     },
+
+    async navigateToHomePage() {
+      let base_url = window.location.origin
+      window.location.href = base_url
+    }
   }
 }
 
 </script>
 
 <style>
+.homeBtn {
+  width: 100%;
+  color: #fff;
+  background-color: #231F20;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  font-size: large;
+  border-radius: 40px;
+}
+
+.homeBtn:hover {
+  color: black;
+  background-color: #4CAF50;
+}
+
 input[type=text], select {
   width: 100%;
   padding: 12px 20px;

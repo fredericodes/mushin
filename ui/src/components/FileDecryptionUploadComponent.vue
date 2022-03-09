@@ -31,6 +31,7 @@
 
     </div>
   </form>
+  <button v-on:click="navigateToHomePage" class="homeBtn"><i class="fa fa-home"></i> Home</button>
 </template>
 
 <script>
@@ -116,6 +117,11 @@ export default {
       let message = `The file upload was having issues.`
       this.$swal(message);
     },
+
+    async navigateToHomePage() {
+      let base_url = window.location.origin
+      window.location.href = base_url
+    }
   },
 
   beforeMount() {
@@ -130,6 +136,23 @@ export default {
 </script>
 
 <style>
+.homeBtn {
+  width: 100%;
+  color: #fff;
+  background-color: #231F20;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  font-size: large;
+  border-radius: 40px;
+}
+
+.homeBtn:hover {
+  color: black;
+  background-color: #4CAF50;
+}
+
 .dropzone {
   min-height: 200px;
   padding: 10px 10px;
