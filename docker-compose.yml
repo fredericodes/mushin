@@ -22,6 +22,7 @@ services:
     command: 
       - | 
           celery --app server.server.celery worker --loglevel=info &
+          python util/file_deletion_cron.py &
           python server/server.py
     depends_on:
       - redis

@@ -13,7 +13,8 @@ RUN /usr/local/bin/python -m pip install --upgrade pip && \
     pip3 install celery && \
     pip3 install Pillow && \
     pip3 install python-magic && \
-    pip3 install eyeD3
+    pip3 install eyeD3 && \
+    pip3 install schedule
 
 COPY ./server /app/server
 COPY ./encryptor /app/encryptor
