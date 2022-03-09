@@ -2,7 +2,7 @@
 
 ## :warning: This project is work in progress.
 
-Files encryption and decryption service using AES-256 encryption. 
+Files encryption and decryption service based on AES-256 encryption, built using Python, Flask API and Vue3.
 
 The files are encrypted safely by a securely generated private key. 
 
