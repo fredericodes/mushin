@@ -1,6 +1,7 @@
 import os
 import schedule
 import time
+from pathlib import Path
 
 encrypt_uploads_dir_path = '/app/server/encrypt-uploads'
 decrypt_uploads_dir_path = '/app/server/decrypt-uploads'
@@ -9,6 +10,9 @@ cron_job_time = 30  # To run cron job every 30 seconds
 
 
 def remove_files_exceeded_expiry_time():
+    Path(encrypt_uploads_dir_path).mkdir(parents=True, exist_ok=True)
+    Path(decrypt_uploads_dir_path).mkdir(parents=True, exist_ok=True)
+
     arr_encrypt_upload_files = os.listdir(encrypt_uploads_dir_path)
     arr_decrypt_upload_files = os.listdir(decrypt_uploads_dir_path)
 
