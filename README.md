@@ -15,3 +15,7 @@ It can be decrypted only by using the same private key to view the encrypted fil
 * Only available to decrypt and view the contents of files by the users who knows the private key.
 * Safely share and secure your files with others.
 * Protect your files from hackers or other intruders.
+
+## How to run application locally?
+* Install docker and docker-compose.
+* In root level of this repository, run `docker-compose up`
