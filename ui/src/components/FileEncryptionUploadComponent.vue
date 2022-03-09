@@ -20,7 +20,7 @@
           The following file formats are supported for encryption.
           <br>
           <br>
-        .jpg, .jpeg, .png, .gif, .pdf, .docx, .doc, .xls, .csv, .zip, .mp3, .mp4, .tif
+        .txt, .jpg, .jpeg, .png, .gif, .pdf, .docx, .doc, .xls, xlsx, .csv, .csv1, .zip, .mp3, .tif, .tiff
       </p>
 
       <p v-if="uploading" class="progress-bar">
@@ -85,6 +85,7 @@ export default {
         this.message = err.response.data().error;
         this.error = true;
         this.uploading = false;
+        await this.showFailedUpload()
       }
     },
 

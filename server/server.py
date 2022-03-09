@@ -17,14 +17,18 @@ from flask_cors import CORS, cross_origin
 from celery_async import make_celery
 from pathlib import Path
 from encryptor.aes import encrypt_file, decrypt_file
+from util.file_validation import is_valid_file
 
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 4000 * 1024 * 1024
 app.config['ENCRYPT_FILE_UPLOAD_PATH'] = '/app/server/encrypt-uploads'
 app.config['DECRYPT_FILE_UPLOAD_PATH'] = '/app/server/decrypt-uploads'
-app.config['ENCRYPT_FILE_UPLOAD_EXTENSIONS'] = ['.jpg', '.jpeg', '.png', '.gif', '.pdf', '.docx', '.doc', '.xls',
-                                                '.csv', '.zip', '.mp4', '.mp3', 'tif']
+app.config['ENCRYPT_FILE_UPLOAD_EXTENSIONS'] = ['.txt', '.jpg', '.jpeg', '.png', '.gif', '.pdf',
+                                                '.docx', '.doc',
+                                                '.xls', 'xlsx', '.csv', '.csv1',
+                                                '.zip', '.mp3',
+                                                '.tif', '.tiff']
 app.config['DECRYPT_FILE_UPLOAD_EXTENSIONS'] = ['.encrypted']
 app.config['CELERY_BROKER_URL'] = 'redis://redis:6379/0'
 app.config['CELERY_RESULT_BACKEND'] = 'redis://redis:6379/0'
@@ -63,6 +67,9 @@ def upload_file_for_encryption():
         os.remove(upload_file_path)
 
         file_path = app.config['ENCRYPT_FILE_UPLOAD_PATH'] + "/" + uploaded_file_unique_name
+        if is_valid_file(file_path, file_ext) is not True:
+            return flask.Response(status=http.HTTPStatus.BAD_REQUEST)
+
         key_bytes = os.urandom(32)  # Generate a key for encryption
         key = key_bytes.hex()
         args = (file_path, key)
