@@ -1,2 +1,11 @@
 * linguist-vendored
-*.vue linguist-vendored=true
+*.py linguist-vendored=false
+*.ts linguist-vendored=false
+*.js linguist-vendored=false
+*.html linguist-vendored=false
+*.css linguist-vendored=false
+*.Dockerfile linguist-vendored=false
+
+
+
+
