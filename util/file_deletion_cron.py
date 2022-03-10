@@ -3,10 +3,12 @@ import schedule
 import time
 from pathlib import Path
 
-encrypt_uploads_dir_path = '/app/server/encrypt-uploads'
-decrypt_uploads_dir_path = '/app/server/decrypt-uploads'
-file_removal_expiry_time = 1200  # To delete files that was created more than 20 minutes ago
-cron_job_time = 30  # To run cron job every 30 seconds
+encrypt_uploads_dir_path = os.environ['ENCRYPT_FILE_UPLOAD_PATH']
+decrypt_uploads_dir_path = os.environ['DECRYPT_FILE_UPLOAD_PATH']
+# To delete files that was created more than the specified time in n number of seconds
+file_removal_expiry_time = os.environ['FILE_REMOVAL_EXPIRY_TIME_SECONDS']
+# To run cron job every n number of seconds
+cron_job_time = os.environ['CRON_JOB_TIME_SECONDS']
 
 
 def remove_files_exceeded_expiry_time():

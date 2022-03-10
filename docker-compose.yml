@@ -16,6 +16,8 @@ services:
     build:
       context: .
       dockerfile: docker/server.Dockerfile
+    env_file:
+      - server/.env
     ports:
       - "10000:8080"
     entrypoint: ["/bin/sh","-c"]

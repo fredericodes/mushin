@@ -10,6 +10,12 @@ import zipfile
 import eyed3
 import magic
 
+allowed_file_upload_limit = 4000 * 1024 * 1024
+allowed_decryption_file_upload_extensions = ['.encrypted']
+allowed_encryption_file_upload_extensions = ['.txt', '.jpg', '.jpeg', '.png',
+                                             '.gif', '.pdf', '.docx', '.doc',
+                                             '.xls', 'xlsx', '.csv', '.csv1',
+                                             '.zip', '.mp3', '.tif', '.tiff']
 
 mimetype_txt = 'text/plain'
 mimetype_pdf = 'application/pdf'

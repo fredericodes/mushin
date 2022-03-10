@@ -17,21 +17,19 @@ from flask_cors import CORS, cross_origin
 from celery_async import make_celery
 from pathlib import Path
 from encryptor.aes import encrypt_file, decrypt_file
-from util.file_validation import is_valid_file
+from util.file_validation import is_valid_file, allowed_file_upload_limit, \
+                                                allowed_encryption_file_upload_extensions, \
+                                                allowed_decryption_file_upload_extensions
 
 
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 4000 * 1024 * 1024
-app.config['ENCRYPT_FILE_UPLOAD_PATH'] = '/app/server/encrypt-uploads'
-app.config['DECRYPT_FILE_UPLOAD_PATH'] = '/app/server/decrypt-uploads'
-app.config['ENCRYPT_FILE_UPLOAD_EXTENSIONS'] = ['.txt', '.jpg', '.jpeg', '.png', '.gif', '.pdf',
-                                                '.docx', '.doc',
-                                                '.xls', 'xlsx', '.csv', '.csv1',
-                                                '.zip', '.mp3',
-                                                '.tif', '.tiff']
-app.config['DECRYPT_FILE_UPLOAD_EXTENSIONS'] = ['.encrypted']
-app.config['CELERY_BROKER_URL'] = 'redis://redis:6379/0'
-app.config['CELERY_RESULT_BACKEND'] = 'redis://redis:6379/0'
+app.config['MAX_CONTENT_LENGTH'] = allowed_file_upload_limit
+app.config['ENCRYPT_FILE_UPLOAD_PATH'] = os.environ['ENCRYPT_FILE_UPLOAD_PATH']
+app.config['DECRYPT_FILE_UPLOAD_PATH'] = os.environ['DECRYPT_FILE_UPLOAD_PATH']
+app.config['ENCRYPT_FILE_UPLOAD_EXTENSIONS'] = allowed_encryption_file_upload_extensions
+app.config['DECRYPT_FILE_UPLOAD_EXTENSIONS'] = allowed_decryption_file_upload_extensions
+app.config['CELERY_BROKER_URL'] = os.environ['CELERY_BROKER_URL']
+app.config['CELERY_RESULT_BACKEND'] = os.environ['CELERY_RESULT_BACKEND']
 
 cors = CORS(app)
 
