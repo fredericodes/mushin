@@ -11,7 +11,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import apiRoutes from "@/api/routes";
+import apiClient from "@/api/client";
 
 export default {
   name: "TrackEncryption",
@@ -30,7 +31,9 @@ export default {
         await this.showTrackingIdNotProvidedErr()
       } else {
         try {
-          const response = await axios.get(`http://localhost:10000/encryption/status?trackingId=${trackingId}`)
+          let getEncryptionStatus = apiRoutes.GetEncryptionStatus
+          let urlParams = `?trackingId=${trackingId}`
+          const response = await apiClient.get(getEncryptionStatus + urlParams)
           if (response.status === 200) {
             if (response.data.status === 'SUCCESS') {
               await this.showSuccessMessageWithEncryptedFileDownload(response.data)
@@ -83,8 +86,10 @@ export default {
     },
 
     async downloadEncryptedFile(trackingId, fileName) {
-      await axios({
-        url: `http://localhost:10000/encrypted?trackingId=${trackingId}`,
+      let encryptedFile = apiRoutes.GetEncryptedFile
+      let urlParams = `?trackingId=${trackingId}`
+      await apiClient({
+        url: encryptedFile + urlParams,
         method: 'GET',
         responseType: 'blob',
       }).then((response) => {

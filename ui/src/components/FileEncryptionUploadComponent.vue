@@ -44,7 +44,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import apiRoutes from "@/api/routes";
+import apiClient from "@/api/client";
 
 export default {
   name: "EncryptionDropZone",
@@ -65,10 +66,10 @@ export default {
       const file = this.$refs.file.files[0];
       const formData = new FormData();
       formData.append('file', file);
-
       try {
         this.uploading = true;
-        const res = await axios.post('http://localhost:10000/encryption/upload', formData, {
+        let uploadFileForEncryption = apiRoutes.UploadFileForEncryption
+        const res = await apiClient.post(uploadFileForEncryption, formData, {
           onUploadProgress: e => this.progress = Math.round(e.loaded * 100 / e.total)
         })
         this.uploadedFiles.push(res.data.file);

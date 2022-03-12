@@ -11,7 +11,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import apiClient from "@/api/client";
+import apiRoutes from "@/api/routes";
 
 export default {
   name: "TrackDecryption",
@@ -30,7 +31,9 @@ export default {
         await this.showTrackingIdNotProvidedErr()
       } else {
         try {
-          const response = await axios.get(`http://localhost:10000/decryption/status?trackingId=${trackingId}`)
+          let decryptionStatus = apiRoutes.GetDecryptionStatus
+          let urlParams = `?trackingId=${trackingId}`
+          const response = await apiClient.get(decryptionStatus + urlParams)
           if (response.status === 200) {
             if (response.data.status === 'SUCCESS') {
               await this.showSuccessMessageWithDecryptedFileDownload(response.data)
@@ -78,8 +81,10 @@ export default {
     },
 
     async downloadDecryptedFile(trackingId, fileName) {
-      await axios({
-        url: `http://localhost:10000/decrypted?trackingId=${trackingId}`,
+      let decryptedFile = apiRoutes.GetDecryptedFile
+      let urlParams = `?trackingId=${trackingId}`
+      await apiClient({
+        url: decryptedFile + urlParams,
         method: 'GET',
         responseType: 'blob',
       }).then((response) => {

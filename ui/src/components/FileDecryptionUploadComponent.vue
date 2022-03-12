@@ -35,7 +35,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import apiRoutes from "@/api/routes";
+import apiClient from "@/api/client";
 
 export default {
   name: "DecryptionDropZone",
@@ -60,15 +61,17 @@ export default {
 
       try {
         this.uploading = true;
-        const res = await axios.post(`http://localhost:10000/decryption/upload`, formData, {
+        let uploadFileForDecryption = apiRoutes.UploadFileForDecryption
+        const res = await apiClient.post(uploadFileForDecryption, formData, {
           onUploadProgress: e => this.progress = Math.round(e.loaded * 100 / e.total)
         })
         this.uploadedFiles.push(res.data.file);
         this.uploading = false;
 
         if (res.status === 200) {
-          const response = await axios.put(
-              `http://localhost:10000/decryption/upload?fileName=${res.data.fileName}&privateSecretKey=${privateSecretKey}`)
+          let decryptFile = apiRoutes.DecryptFile
+          let urlParams = `?fileName=${res.data.fileName}&privateSecretKey=${privateSecretKey}`
+          const response = await apiClient.put(decryptFile+urlParams)
           if (response.status === 200) {
             await this.showSuccessfulUpload(response.data.decryptionTrackingId)
             localStorage.clear()
