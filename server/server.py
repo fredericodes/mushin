@@ -46,9 +46,17 @@ def decrypt_upload_file(args):
     decrypt_file(args)
 
 
+def check_if_storage_avail():
+    _, _, free = shutil.disk_usage("/")
+    hard_disk_limit = 8589934592  # 8 GB in bytes
+    if int(str(free)) < hard_disk_limit:
+        return flask.Response(status=http.HTTPStatus.INSUFFICIENT_STORAGE)
+
+
 @app.route('/encryption/upload', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def upload_file_for_encryption():
+    check_if_storage_avail()
     Path(app.config['ENCRYPT_FILE_UPLOAD_PATH']).mkdir(parents=True, exist_ok=True)
 
     uploaded_file = request.files['file']
@@ -129,6 +137,7 @@ def get_encrypted_file():
 @app.route('/decryption/upload', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def upload_file_for_decryption():
+    check_if_storage_avail()
     Path(app.config['DECRYPT_FILE_UPLOAD_PATH']).mkdir(parents=True, exist_ok=True)
 
     uploaded_file = request.files['file']
