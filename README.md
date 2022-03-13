@@ -1,7 +1,5 @@
 # Mushin
 
-## :warning: This project is work in progress.
-
 Files encryption and decryption service based on AES-256 encryption, built using Python, Flask API and Vue3.
 
 The files are encrypted safely by a securely generated private key. 
@@ -19,3 +17,6 @@ It can be decrypted only by using the same private key to view the encrypted fil
 ## How to run application locally?
 * Install docker and docker-compose.
 * In root level of this repository, run `docker-compose up`
+
+## Demo
+https://mushin.tech
