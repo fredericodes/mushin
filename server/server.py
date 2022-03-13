@@ -16,7 +16,7 @@ from flask import Flask, request, current_app, jsonify, send_file
 from flask_cors import CORS, cross_origin
 from celery_async import make_celery
 from pathlib import Path
-from encryptor.aes import encrypt_file, decrypt_file
+from util.aes import encrypt_file, decrypt_file
 from util.file_validation import is_valid_file, allowed_file_upload_limit, \
                                                 allowed_encryption_file_upload_extensions, \
                                                 allowed_decryption_file_upload_extensions

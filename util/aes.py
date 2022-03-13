@@ -45,3 +45,4 @@ def decrypt_file(args):
     decrypted_file_path = file_path.replace(".encrypted", "")
     with open(decrypted_file_path, "wb") as e:
         e.write(decrypted_bytes)
+        os.remove(file_path)

@@ -17,5 +17,4 @@ RUN /usr/local/bin/python -m pip install --upgrade pip && \
     pip3 install schedule
 
 COPY ./server /app/server
-COPY ./encryptor /app/encryptor
 COPY ./util /app/util
