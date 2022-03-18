@@ -23,7 +23,7 @@ services:
     entrypoint: ["/bin/sh","-c"]
     command: 
       - | 
-          celery --app server.server.celery worker --loglevel=info &
+          celery --app server.server.celery worker --loglevel=info --concurrency=3 &
           python util/file_deletion_cron.py &
           python server/server.py
     depends_on:
